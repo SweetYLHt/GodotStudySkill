@@ -45,8 +45,8 @@ Video URL / Local File
 ### Installation
 
 ```bash
-git clone https://github.com/SweetYLHt/BilinoteGodotStudy.git
-cd BilinoteGodotStudy
+git clone https://github.com/SweetYLHt/GodotStudySkill.git
+cd GodotStudySkill
 pip install -r requirements.txt
 ```
 
@@ -90,7 +90,7 @@ cp -r . ~/.claude/skills/godot-study
 ## Project Structure
 
 ```
-BilinoteGodotStudy/
+GodotStudySkill/
 ├── README.md
 ├── LICENSE
 ├── requirements.txt
