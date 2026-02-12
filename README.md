@@ -1,66 +1,68 @@
 # GameStudySkill
 
-**Video Tutorial to Structured Learning Notes** — Automatically convert game development video tutorials into well-organized study materials.
+[English](README_EN.md)
 
-Supports **Godot, Unity, Unreal Engine, Blender, and Pixel Art** with automatic domain detection.
+**视频教程转结构化学习笔记** — 自动将游戏开发视频教程转换为条理清晰的学习资料。
 
-Supports **Bilibili**, **YouTube**, and **local video files**. Uses local AI transcription (no API key required).
+支持 **Godot、Unity、Unreal Engine、Blender 和像素画** 领域，可自动检测视频所属领域。
 
-## Supported Domains
+支持 **Bilibili**、**YouTube** 和 **本地视频文件**。使用本地 AI 语音转文字（无需 API Key）。
 
-| Domain | Description | Prompt |
-|--------|------------|--------|
-| Godot | GDScript, scene tree, node system | `GODOT_PROMPT.md` |
-| Unity | C#, MonoBehaviour, component system | `UNITY_PROMPT.md` |
-| Unreal Engine | Blueprint, C++, Actor/Component | `UNREAL_PROMPT.md` |
-| Blender | 3D modeling, modifiers, node editors | `BLENDER_PROMPT.md` |
-| Pixel Art | Aseprite, dithering, palette design | `PIXEL_ART_PROMPT.md` |
+## 支持的领域
 
-## How It Works
+| 领域 | 说明 | Prompt 文件 |
+|------|------|-------------|
+| Godot | GDScript、场景树、节点系统 | `GODOT_PROMPT.md` |
+| Unity | C#、MonoBehaviour、组件系统 | `UNITY_PROMPT.md` |
+| Unreal Engine | Blueprint、C++、Actor/Component | `UNREAL_PROMPT.md` |
+| Blender | 3D 建模、修改器、节点编辑器 | `BLENDER_PROMPT.md` |
+| 像素画 | Aseprite、抖动、调色板设计 | `PIXEL_ART_PROMPT.md` |
+
+## 工作流程
 
 ```
-Video URL / Local File
+视频链接 / 本地文件
         |
         v
-  [Download Audio]  ──>  [Try Platform Subtitles First]
-        |                         |
-        v                         v
-  [Whisper Transcription]   [Parse Subtitles]
-        |                         |
-        +────────+────────────────+
+  [下载音频]  ──>  [优先尝试平台字幕]
+        |                   |
+        v                   v
+  [Whisper 语音转文字]   [解析字幕]
+        |                   |
+        +────────+──────────+
                  |
                  v
-       [Domain Detection]  ──>  auto-detect or --domain flag
+         [领域检测]  ──>  自动检测 或 --domain 手动指定
                  |
                  v
-       [Load Domain Prompt]  ──>  GODOT / UNITY / UNREAL / BLENDER / PIXEL_ART
+       [加载领域 Prompt]  ──>  GODOT / UNITY / UNREAL / BLENDER / PIXEL_ART
                  |
                  v
-       [Claude AI Analysis]
+        [Claude AI 分析]
                  |
                  v
-    [Structured Markdown Notes]
+       [结构化 Markdown 笔记]
 ```
 
-**Output includes (per domain):**
-- Difficulty level auto-detection (beginner / intermediate / advanced)
-- Version/tool detection (e.g., Godot 4.x, Unity 2022 LTS, UE5, Blender 4.x, Aseprite)
-- Knowledge point extraction with domain-specific API/tool references
-- Step-by-step editor/tool operation paths
-- Complete code blocks or technique breakdowns with annotations
-- Architecture diagrams (scene trees, node graphs, modifier stacks, palette charts)
-- Common pitfalls and best practices
-- Video timestamps for easy reference
+**输出内容（按领域定制）：**
+- 难度等级自动检测（入门 / 中级 / 高级）
+- 版本/工具识别（如 Godot 4.x、Unity 2022 LTS、UE5、Blender 4.x、Aseprite）
+- 知识点提取，附带领域专属 API/工具参考
+- 分步骤编辑器/工具操作路径
+- 完整代码块或技术拆解，附注释说明
+- 架构图示（场景树、节点图、修改器堆栈、调色板图表）
+- 常见陷阱与最佳实践
+- 视频时间戳，方便回看
 
-## Quick Start
+## 快速开始
 
-### Prerequisites
+### 前置要求
 
 - Python 3.10+
-- FFmpeg (for local video files)
-- GPU with CUDA support (optional, for faster transcription)
+- FFmpeg（处理本地视频文件时需要）
+- 支持 CUDA 的 GPU（可选，加速语音转文字）
 
-### Installation
+### 安装
 
 ```bash
 git clone https://github.com/SweetYLHt/GameStudySkill.git
@@ -68,38 +70,38 @@ cd GameStudySkill
 pip install -r requirements.txt
 ```
 
-### Usage
+### 使用方法
 
-#### As a standalone tool
+#### 作为独立工具使用
 
 ```bash
-# From a Bilibili video
+# Bilibili 视频
 python scripts/main.py "https://www.bilibili.com/video/BV1xxxxx"
 
-# From a YouTube video
+# YouTube 视频
 python scripts/main.py "https://www.youtube.com/watch?v=xxxxx"
 
-# From a local video file
+# 本地视频文件
 python scripts/main.py "/path/to/tutorial.mp4"
 ```
 
-The script outputs a transcript JSON file to `scripts/output/`. You can then use the transcript with your preferred LLM to generate structured notes using the appropriate prompt template from `resources/`.
+脚本会将转录结果以 JSON 格式输出到 `scripts/output/` 目录。之后你可以使用 `resources/` 中相应的 Prompt 模板，配合你喜欢的 LLM 生成结构化笔记。
 
-#### As a Claude Code skill
+#### 作为 Claude Code 技能使用
 
-This project is also a [Claude Code](https://claude.ai/claude-code) skill. After installing, use it directly in Claude Code:
+本项目同时也是一个 [Claude Code](https://claude.ai/claude-code) 技能。安装后可以直接在 Claude Code 中使用：
 
 ```
-# Auto-detect domain
+# 自动检测领域
 /gamedev-study https://www.bilibili.com/video/BV1xxxxx
 
-# Specify domain manually
+# 手动指定领域
 /gamedev-study https://www.youtube.com/watch?v=xxxxx --domain unity
 ```
 
-Claude will download, transcribe, detect the domain, and generate the complete learning document automatically.
+Claude 会自动完成下载、转录、领域检测并生成完整的学习文档。
 
-To install as a Claude Code skill, copy the project to your Claude skills directory:
+安装为 Claude Code 技能，将项目复制到技能目录即可：
 
 ```bash
 # Windows
@@ -109,76 +111,77 @@ cp -r . %USERPROFILE%\.claude\skills\gamedev-study
 cp -r . ~/.claude/skills/gamedev-study
 ```
 
-## Project Structure
+## 项目结构
 
 ```
 GameStudySkill/
-├── README.md
+├── README.md                      # 中文说明
+├── README_EN.md                   # English README
 ├── LICENSE
 ├── requirements.txt
-├── SKILL.md                       # Claude Code skill definition (multi-domain)
+├── SKILL.md                       # Claude Code 技能定义（多领域）
 ├── resources/
-│   ├── DOMAIN_DETECTION.md        # Auto domain detection rules
-│   ├── GODOT_PROMPT.md            # Godot learning note prompt
-│   ├── UNITY_PROMPT.md            # Unity learning note prompt
-│   ├── UNREAL_PROMPT.md           # Unreal Engine learning note prompt
-│   ├── BLENDER_PROMPT.md          # Blender learning note prompt
-│   └── PIXEL_ART_PROMPT.md        # Pixel Art learning note prompt
+│   ├── DOMAIN_DETECTION.md        # 自动领域检测规则
+│   ├── GODOT_PROMPT.md            # Godot 学习笔记 Prompt
+│   ├── UNITY_PROMPT.md            # Unity 学习笔记 Prompt
+│   ├── UNREAL_PROMPT.md           # Unreal Engine 学习笔记 Prompt
+│   ├── BLENDER_PROMPT.md          # Blender 学习笔记 Prompt
+│   └── PIXEL_ART_PROMPT.md        # 像素画学习笔记 Prompt
 ├── scripts/
-│   ├── main.py                    # Main entry point
-│   ├── models.py                  # Data models (TranscriptSegment, AudioMeta, etc.)
-│   ├── transcriber.py             # Whisper speech-to-text engine
+│   ├── main.py                    # 主入口
+│   ├── models.py                  # 数据模型（TranscriptSegment、AudioMeta 等）
+│   ├── transcriber.py             # Whisper 语音转文字引擎
 │   └── downloaders/
-│       ├── bilibili.py            # Bilibili video handler
-│       ├── youtube.py             # YouTube video handler
-│       └── local.py               # Local file handler
+│       ├── bilibili.py            # Bilibili 视频处理
+│       ├── youtube.py             # YouTube 视频处理
+│       └── local.py               # 本地文件处理
 └── docs/
-    ├── godot-study/               # Godot learning notes output
-    ├── unity-study/               # Unity learning notes output
-    ├── unreal-study/              # Unreal Engine learning notes output
-    ├── blender-study/             # Blender learning notes output
-    └── pixel-art-study/           # Pixel Art learning notes output
+    ├── godot-study/               # Godot 学习笔记输出
+    ├── unity-study/               # Unity 学习笔记输出
+    ├── unreal-study/              # Unreal Engine 学习笔记输出
+    ├── blender-study/             # Blender 学习笔记输出
+    └── pixel-art-study/           # 像素画学习笔记输出
 ```
 
-## Configuration
+## 配置
 
-| Environment Variable | Default | Description |
-|---|---|---|
-| `WHISPER_MODEL_SIZE` | `base` | Whisper model size (`tiny`, `base`, `small`, `medium`, `large-v3`) |
+| 环境变量 | 默认值 | 说明 |
+|----------|--------|------|
+| `WHISPER_MODEL_SIZE` | `base` | Whisper 模型大小（`tiny`、`base`、`small`、`medium`、`large-v3`） |
 
-Larger models produce better transcriptions but require more VRAM/RAM and are slower.
+更大的模型转录质量更好，但需要更多显存/内存，速度也更慢。
 
-## Domain Detection
+## 领域检测
 
-The system automatically detects the video's domain by analyzing:
-1. **URL / Title keywords** — fast path for obvious matches
-2. **Transcript content** — scans the first 2000 characters for domain-specific indicators
+系统通过以下方式自动检测视频所属领域：
+1. **URL / 标题关键词** — 针对明显匹配的快速路径
+2. **转录内容** — 扫描前 2000 个字符中的领域特征词
 
-Detection rules are defined in `resources/DOMAIN_DETECTION.md`. When auto-detection fails, the system asks the user to choose.
+检测规则定义在 `resources/DOMAIN_DETECTION.md` 中。当自动检测失败时，系统会询问用户选择。
 
-You can bypass detection entirely with the `--domain` flag.
+也可以通过 `--domain` 参数直接指定领域，跳过自动检测。
 
-## Prompt Templates
+## Prompt 模板
 
-Each domain has its own prompt template in `resources/`. All prompts share a common structure:
+每个领域在 `resources/` 目录下都有独立的 Prompt 模板，所有模板共享统一结构：
 
-1. **Auto-detect difficulty** — Beginner / Intermediate / Advanced based on content analysis
-2. **Version/tool detection** — Identifies specific versions, tools, or configurations
-3. **Generate structured output** — Core ideas, knowledge points, operation paths, architecture, key takeaways
+1. **自动判断难度** — 根据内容分析判定：入门 / 中级 / 高级
+2. **版本/工具识别** — 识别具体版本、工具或配置
+3. **生成结构化输出** — 核心思路、知识点、操作路径、架构图、关键要点
 
-You can customize any prompt to adjust the output format or add domain-specific analysis rules.
+你可以自定义任何 Prompt 来调整输出格式或添加领域专属的分析规则。
 
-## Example Output
+## 示例输出
 
-See the `docs/godot-study/` directory for example generated learning notes.
+参见 `docs/godot-study/` 目录中的示例学习笔记。
 
-## Dependencies
+## 依赖
 
-| Package | Purpose |
-|---|---|
-| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | Video/audio downloading from Bilibili, YouTube, etc. |
-| [faster-whisper](https://github.com/SYSTRAN/faster-whisper) | Local offline speech-to-text (CTranslate2-based) |
+| 包 | 用途 |
+|----|------|
+| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | 从 Bilibili、YouTube 等平台下载视频/音频 |
+| [faster-whisper](https://github.com/SYSTRAN/faster-whisper) | 本地离线语音转文字（基于 CTranslate2） |
 
-## License
+## 许可证
 
 [MIT](LICENSE)
