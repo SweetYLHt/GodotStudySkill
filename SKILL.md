@@ -1,10 +1,20 @@
-# Godot Study — Video Tutorial to Learning Notes
+# GameDev Study — Video Tutorial to Learning Notes
 
-Generate structured Godot learning materials from video tutorials. Use when studying Godot game development from video content.
+Generate structured learning materials from game development video tutorials across multiple domains. Supports **Godot, Unity, Unreal Engine, Blender, and Pixel Art**.
 
 ## Trigger
 
-`/godot-study <video-url-or-file-path>`
+`/gamedev-study <video-url-or-file-path> [--domain <domain>]`
+
+## Supported Domains
+
+| Domain | Prompt File | Output Directory |
+|--------|------------|------------------|
+| `godot` | `GODOT_PROMPT.md` | `docs/godot-study/` |
+| `unity` | `UNITY_PROMPT.md` | `docs/unity-study/` |
+| `unreal` | `UNREAL_PROMPT.md` | `docs/unreal-study/` |
+| `blender` | `BLENDER_PROMPT.md` | `docs/blender-study/` |
+| `pixel-art` | `PIXEL_ART_PROMPT.md` | `docs/pixel-art-study/` |
 
 ## Input Detection
 
@@ -23,13 +33,30 @@ Generate structured Godot learning materials from video tutorials. Use when stud
 1. If `.json`: read as transcript (expects `{full_text, segments}` format)
 2. If `.md`: read as existing notes text
 
+## Domain Detection
+
+After obtaining the transcript content, determine which domain the video belongs to:
+
+1. **If `--domain` argument is provided** → use it directly, skip detection
+2. **Otherwise** → read `<skill-dir>/resources/DOMAIN_DETECTION.md` and follow its rules:
+   - First check URL / title for explicit domain keywords
+   - Then scan the first 2000 characters of `full_text` for domain-specific indicators
+   - If 3+ indicators match a single domain → use that domain (high confidence)
+   - If indicators are ambiguous or no clear match → ask the user to choose:
+     "无法自动判断该视频的领域，请选择: godot / unity / unreal / blender / pixel-art"
+
 ## Generate Learning Document
 
-1. Read `<skill-dir>/resources/GODOT_PROMPT.md` for the analysis prompt
-2. Combine transcript content with the Godot prompt
+1. Based on the detected domain, read the corresponding prompt file from `<skill-dir>/resources/`:
+   - `godot` → `GODOT_PROMPT.md`
+   - `unity` → `UNITY_PROMPT.md`
+   - `unreal` → `UNREAL_PROMPT.md`
+   - `blender` → `BLENDER_PROMPT.md`
+   - `pixel-art` → `PIXEL_ART_PROMPT.md`
+2. Combine transcript content with the domain prompt
 3. Generate the learning document following the prompt structure
-4. Create output directory `docs/godot-study/` if not exists
-5. Write result to `docs/godot-study/<sanitized-title>.md`
+4. Create output directory `docs/<domain>-study/` if not exists
+5. Write result to `docs/<domain>-study/<sanitized-title>.md`
 
 ## Dependencies
 
@@ -42,4 +69,5 @@ pip install -r <skill-dir>/scripts/requirements.txt
 
 - Transcription uses local faster-whisper (no API key needed)
 - Supports Bilibili, YouTube, and local video files
-- Claude performs the Godot-specific analysis directly (no external LLM call)
+- Claude performs the domain-specific analysis directly (no external LLM call)
+- Domain detection is automatic but can be overridden with `--domain`
