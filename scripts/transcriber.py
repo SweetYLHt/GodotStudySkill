@@ -4,6 +4,9 @@ import os
 import logging
 from pathlib import Path
 
+# Fix OpenMP conflict on Windows
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
 from faster_whisper import WhisperModel
 
 from models import TranscriptResult, TranscriptSegment
