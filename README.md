@@ -83,9 +83,23 @@ python scripts/main.py "https://www.youtube.com/watch?v=xxxxx"
 
 # 本地视频文件
 python scripts/main.py "/path/to/tutorial.mp4"
+
+# 自定义输出目录
+python scripts/main.py "video.mp4" -o /path/to/notes
+
+# 保留音频文件（默认转录后自动删除以节省空间）
+python scripts/main.py "video.mp4" --keep-audio
 ```
 
-脚本会将转录结果以 JSON 格式输出到 `scripts/output/` 目录。之后你可以使用 `resources/` 中相应的 Prompt 模板，配合你喜欢的 LLM 生成结构化笔记。
+**参数说明：**
+
+| 参数 | 说明 |
+|------|------|
+| `-o, --output DIR` | 指定输出目录（默认: `./output`） |
+| `--keep-audio` | 转录完成后保留音频文件（默认: 自动删除） |
+| `-h, --help` | 显示帮助信息 |
+
+脚本会将转录结果以 JSON 格式输出到指定目录。
 
 #### 作为 Claude Code 技能使用
 
