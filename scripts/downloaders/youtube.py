@@ -3,6 +3,7 @@
 import os
 import json
 import logging
+import shutil
 from typing import Optional
 
 import yt_dlp
@@ -12,16 +13,44 @@ from models import AudioMeta, TranscriptResult, TranscriptSegment
 logger = logging.getLogger(__name__)
 
 
+def find_ffmpeg() -> Optional[str]:
+    """Find FFmpeg executable path."""
+    # Common Windows paths
+    ffmpeg_paths = [
+        r"C:\Program Files\ffmpeg\bin",
+        r"C:\Program Files (x86)\ffmpeg\bin",
+        r"C:\Users\32691\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.0.1-full_build\bin",
+        "/usr/bin",
+        "/usr/local/bin",
+    ]
+    for path in ffmpeg_paths:
+        ffmpeg_path = os.path.join(path, "ffmpeg.exe" if os.name == "nt" else "ffmpeg")
+        if os.path.exists(ffmpeg_path):
+            return path
+    # Try system PATH
+    ffmpeg = shutil.which("ffmpeg")
+    if ffmpeg:
+        return os.path.dirname(ffmpeg)
+    return None
+
+
 def download_audio(url: str, output_dir: str) -> AudioMeta:
     """Download audio from a YouTube video and return metadata."""
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, "%(id)s.%(ext)s")
+
+    ffmpeg_location = find_ffmpeg()
+    if ffmpeg_location:
+        logger.info(f"Using FFmpeg from: {ffmpeg_location}")
+    else:
+        logger.warning("FFmpeg not found. Please install FFmpeg for audio extraction.")
 
     ydl_opts = {
         "format": "bestaudio[ext=m4a]/bestaudio/best",
         "outtmpl": output_path,
         "noplaylist": True,
         "quiet": True,
+        "ffmpeg_location": ffmpeg_location,
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
