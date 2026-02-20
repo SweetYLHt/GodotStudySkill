@@ -39,6 +39,9 @@ Video URL / Local File
        [Claude AI Analysis]
                  |
                  v
+    [Timestamp Validation & Backfill]
+                 |
+                 v
     [Structured Markdown Notes]
 ```
 
@@ -50,7 +53,7 @@ Video URL / Local File
 - Complete code blocks or technique breakdowns with annotations
 - Architecture diagrams (scene trees, node graphs, modifier stacks, palette charts)
 - Common pitfalls and best practices
-- Video timestamps for easy reference
+- Clickable video timestamps (auto-adapts to Bilibili / YouTube jump links) with completeness validation
 
 ## Quick Start
 
@@ -81,9 +84,23 @@ python scripts/main.py "https://www.youtube.com/watch?v=xxxxx"
 
 # From a local video file
 python scripts/main.py "/path/to/tutorial.mp4"
+
+# Custom output directory
+python scripts/main.py "video.mp4" -o /path/to/notes
+
+# Keep audio files (default: auto-deleted after transcription)
+python scripts/main.py "video.mp4" --keep-audio
 ```
 
-The script outputs a transcript JSON file to `scripts/output/`. You can then use the transcript with your preferred LLM to generate structured notes using the appropriate prompt template from `resources/`.
+**Parameters:**
+
+| Flag | Description |
+|------|-------------|
+| `-o, --output DIR` | Output directory (default: `./output`) |
+| `--keep-audio` | Keep audio files after transcription (default: auto-delete) |
+| `-h, --help` | Show help |
+
+The script outputs a transcript JSON file to the specified directory.
 
 #### As a Claude Code skill
 
@@ -99,15 +116,30 @@ This project is also a [Claude Code](https://claude.ai/claude-code) skill. After
 
 Claude will download, transcribe, detect the domain, and generate the complete learning document automatically.
 
-To install as a Claude Code skill, copy the project to your Claude skills directory:
+To install as a Claude Code skill, a symlink is recommended (keeps updates in sync):
 
 ```bash
+# macOS / Linux (recommended)
+ln -s /path/to/GameStudySkill ~/.claude/skills/gamedev-study
+
 # Windows
 cp -r . %USERPROFILE%\.claude\skills\gamedev-study
-
-# macOS / Linux
-cp -r . ~/.claude/skills/gamedev-study
 ```
+
+## Clickable Timestamps
+
+Generated learning notes include clickable timestamp links on `###` content headings that jump directly to the corresponding video position:
+
+| Platform | Format | Example |
+|----------|--------|---------|
+| Bilibili | `[mm:ss](video_url?t=total_seconds)` | `[01:03](https://www.bilibili.com/video/BV1xxx?t=63)` |
+| YouTube | `[mm:ss](https://www.youtube.com/watch?v=ID&t=total_seconds_s)` | `[01:03](https://www.youtube.com/watch?v=xxx&t=63s)` |
+| Local file | `[mm:ss]` (plain text) | `[01:03]` |
+
+- Timestamps are placed only on content headings, not scattered in body text
+- Structural headings (e.g., "Key Scripts", "Signal Connections") do not get timestamps
+- Auto-validation after generation: missing timestamps on `###` headings are backfilled from `segments` data
+- Videos over 60 minutes use `h:mm:ss` format
 
 ## Project Structure
 

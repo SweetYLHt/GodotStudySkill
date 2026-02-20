@@ -79,10 +79,15 @@ After obtaining the transcript content, determine which domain the video belongs
    - `unreal` → `UNREAL_PROMPT.md`
    - `blender` → `BLENDER_PROMPT.md`
    - `pixel-art` → `PIXEL_ART_PROMPT.md`
-2. Combine transcript content with the domain prompt
+2. Combine transcript content with the domain prompt. When passing transcript data, include:
+   - `full_text` — the complete transcript text
+   - `segments` — the array of `{start, end, text}` objects (needed for timestamp matching)
+   - `source` — the original video URL or file path (needed for building clickable timestamp links)
+   - `platform` — "bilibili", "youtube", or "local" (determines timestamp link format)
 3. Generate the learning document following the prompt structure
-4. Create output directory if not exists
-5. Write result to `<output-path>/<sanitized-title>.md`
+4. **Timestamp validation**: After generation, verify every content-level `###` heading has a timestamp. If any is missing, scan `segments` for the best-matching text and add the timestamp with the correct platform-specific link format.
+5. Create output directory if not exists
+6. Write result to `<output-path>/<sanitized-title>.md`
 
 ## Dependencies
 

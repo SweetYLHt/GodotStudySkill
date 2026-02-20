@@ -41,6 +41,9 @@
         [Claude AI 分析]
                  |
                  v
+       [时间戳校验 & 补全]
+                 |
+                 v
        [结构化 Markdown 笔记]
 ```
 
@@ -52,7 +55,7 @@
 - 完整代码块或技术拆解，附注释说明
 - 架构图示（场景树、节点图、修改器堆栈、调色板图表）
 - 常见陷阱与最佳实践
-- 视频时间戳，方便回看
+- 可点击的视频时间戳（Bilibili / YouTube 自适应跳转链接），附自动完整性校验
 
 ## 快速开始
 
@@ -115,15 +118,30 @@ python scripts/main.py "video.mp4" --keep-audio
 
 Claude 会自动完成下载、转录、领域检测并生成完整的学习文档。
 
-安装为 Claude Code 技能，将项目复制到技能目录即可：
+安装为 Claude Code 技能，推荐使用符号链接（方便后续更新同步）：
 
 ```bash
+# macOS / Linux（推荐）
+ln -s /path/to/GameStudySkill ~/.claude/skills/gamedev-study
+
 # Windows
 cp -r . %USERPROFILE%\.claude\skills\gamedev-study
-
-# macOS / Linux
-cp -r . ~/.claude/skills/gamedev-study
 ```
+
+## 可点击时间戳
+
+生成的学习笔记中，`###` 级内容标题会自动附带可点击的时间戳链接，点击即可跳转到视频对应位置：
+
+| 来源平台 | 格式 | 示例 |
+|----------|------|------|
+| Bilibili | `[mm:ss](视频URL?t=总秒数)` | `[01:03](https://www.bilibili.com/video/BV1xxx?t=63)` |
+| YouTube | `[mm:ss](https://www.youtube.com/watch?v=ID&t=总秒数s)` | `[01:03](https://www.youtube.com/watch?v=xxx&t=63s)` |
+| 本地文件 | `[mm:ss]`（纯文本） | `[01:03]` |
+
+- 时间戳仅标注在内容型小标题上，不散落在正文中
+- 结构性标题（如"关键脚本""信号连接"等模板固定标题）不添加时间戳
+- 生成后自动校验：如有 `###` 标题缺失时间戳，会从 `segments` 数据中搜索补全
+- 超过 60 分钟的视频使用 `h:mm:ss` 格式
 
 ## 项目结构
 
